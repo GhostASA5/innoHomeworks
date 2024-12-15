@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: bank
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db.changelog/db.changelog-master.xml
+
+server:
+  port: 8090
