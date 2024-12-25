@@ -5,4 +5,4 @@ services:
     build: .
     command: java -jar app.jar
     volumes:
-      - ./src/main/resources:/app/resources
+      - ./resources:/app/resources

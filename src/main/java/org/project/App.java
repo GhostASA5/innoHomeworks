@@ -44,7 +44,7 @@ public class App {
             System.out.println(e.getMessage());
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("resources/output.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("resources/outputList.txt"))) {
             for (Figure figure : figures) {
                 writer.write(figure.getClass() + " perimeter: " + figure.getPerimeter() + "\n");
             }
