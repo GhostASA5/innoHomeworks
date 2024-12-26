@@ -1,4 +1,0 @@
-class org.project.model.Circle perimeter: 31.41592653589793
-class org.project.model.Square perimeter: 16.0
-class org.project.model.Rectangle perimeter: 18.0
-class org.project.model.Ellipse perimeter: 19.869176531592203
