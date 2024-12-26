@@ -34,7 +34,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.project.ListTask</mainClass>
+                            <mainClass>org.project.MapTask</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

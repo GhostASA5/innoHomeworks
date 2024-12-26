@@ -1,1 +1,0 @@
-cat;dog;tree;book;fish;rain;moon;star;love;smile
