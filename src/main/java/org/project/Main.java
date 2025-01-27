@@ -1,5 +1,6 @@
 package org.project;
 
+import org.project.model.Client;
 import org.project.repository.BrokerAccountRepository;
 import org.project.repository.ClientRepository;
 import org.project.repository.TransactionRepository;
@@ -12,9 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Main {
 
-    private static final ClientRepository clientRepository = new ClientRepositoryImpl();
-    private static final BrokerAccountRepository accountRepository = new BrokerAccountRepositoryImpl();
+
     private static final TransactionRepository transactionRepository = new TransactionRepositoryImpl();
+    private static final BrokerAccountRepository accountRepository = new BrokerAccountRepositoryImpl(transactionRepository);
+    private static final ClientRepository clientRepository = new ClientRepositoryImpl(accountRepository);
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -25,5 +27,16 @@ public class Main {
         System.out.println(clientRepository.getClient(1L));
         System.out.println(accountRepository.getBrokerAccount(1L));
         System.out.println(transactionRepository.getTransaction(1L));
+
+        System.out.println(clientRepository.getClients());
+        System.out.println(clientRepository.getClient(1L));
+
+        clientRepository.updateClient(1L, Client.builder().name("John New").build());
+        System.out.println(clientRepository.getClient(1L));
+
+        clientRepository.deleteClient(1L);
+        clientRepository.deleteAllClients();
+
+        System.out.println(clientRepository.getClients());
     }
 }

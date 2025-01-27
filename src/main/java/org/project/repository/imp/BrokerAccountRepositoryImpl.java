@@ -1,16 +1,24 @@
 package org.project.repository.imp;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.project.config.JDBCTemplateConfig;
+import org.project.exception.EntityNotFoundException;
 import org.project.model.BrokerAccount;
 import org.project.repository.BrokerAccountRepository;
+import org.project.repository.TransactionRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 public class BrokerAccountRepositoryImpl implements BrokerAccountRepository {
 
     private final JdbcTemplate jdbcTemplate = JDBCTemplateConfig.getJdbcTemplate();
+
+    private final TransactionRepository transactionRepository;
 
     @Override
     public List<BrokerAccount> getBrokerAccounts() {
@@ -20,8 +28,13 @@ public class BrokerAccountRepositoryImpl implements BrokerAccountRepository {
 
     @Override
     public BrokerAccount getBrokerAccount(Long id) {
-        String sql = "SELECT * FROM brokerage_accounts WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, brokerAccountRowMapper, id);
+        try {
+            String sql = "SELECT * FROM brokerage_accounts WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, brokerAccountRowMapper, id);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Broker account with id " + id + " not found");
+        }
+
     }
 
     @Override
@@ -32,15 +45,31 @@ public class BrokerAccountRepositoryImpl implements BrokerAccountRepository {
     }
 
     @Override
-    public void updateBrokerAccount(BrokerAccount brokerAccount) {
+    public void updateBrokerAccount(Long id, BrokerAccount brokerAccount) {
         String sql = "UPDATE brokerage_accounts SET client_id = ?, account_number = ?, balance = ? WHERE id = ?";
-        jdbcTemplate.update(sql, brokerAccount.getClientId(), brokerAccount.getAccountNumber(), brokerAccount.getBalance(), brokerAccount.getId());
+        int updateRow = jdbcTemplate.update(sql, brokerAccount.getClientId(), brokerAccount.getAccountNumber(), brokerAccount.getBalance(), id);
+        if (updateRow == 0) {
+            log.info("Broker account with id " + brokerAccount.getId() + " not found");
+            createBrokerAccount(brokerAccount);
+        }
     }
 
     @Override
     public void deleteBrokerAccount(Long id) {
+        transactionRepository.deleteTransaction(id);
+
         String sql = "DELETE FROM brokerage_accounts WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        int deletedRow = jdbcTemplate.update(sql, id);
+        if (deletedRow == 0) {
+            throw new EntityNotFoundException("Broker account with id " + id + " not found");
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+        transactionRepository.deleteAllTransactions();
+        String sql = "DELETE FROM brokerage_accounts";
+        jdbcTemplate.update(sql);
     }
 
     private static final RowMapper<BrokerAccount> brokerAccountRowMapper = (rs, rowNum) -> {

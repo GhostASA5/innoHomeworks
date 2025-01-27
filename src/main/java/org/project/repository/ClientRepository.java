@@ -13,7 +13,11 @@ public interface ClientRepository {
 
     void addClient(Client client);
 
-    void updateClient(Client client);
+    void updateClient(Long id, Client client);
 
     void deleteClient(Long id);
+
+    void deleteAllClients();
+
+    Client getByEmail(String email);
 }
