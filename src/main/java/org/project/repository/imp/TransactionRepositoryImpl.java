@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class TransactionRepositoryImpl implements TransactionRepository {
@@ -23,18 +24,20 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public Transaction getTransaction(Long id) {
-        try {
-            String sql = "SELECT * FROM transactions WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, transactionRowMapper, id);
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Transaction with id " + id + " not found");
-        }
+        String sql = "SELECT * FROM transactions";
+        return jdbcTemplate.query(sql, transactionRowMapper)
+                .stream()
+                .filter(transaction -> Objects.equals(transaction.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Transaction with id " + id + " not found"
+                ));
     }
 
     @Override
-    public int createTransaction(Transaction transaction) {
+    public void createTransaction(Transaction transaction) {
         String sql = "INSERT INTO transactions (brokerage_account_id, type, amount, transaction_date) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,
+        jdbcTemplate.update(sql,
                 transaction.getBrokerAccountId(),
                 transaction.getType(),
                 transaction.getAmount(),

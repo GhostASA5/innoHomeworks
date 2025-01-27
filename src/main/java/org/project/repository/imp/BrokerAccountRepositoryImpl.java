@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,13 +29,14 @@ public class BrokerAccountRepositoryImpl implements BrokerAccountRepository {
 
     @Override
     public BrokerAccount getBrokerAccount(Long id) {
-        try {
-            String sql = "SELECT * FROM brokerage_accounts WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, brokerAccountRowMapper, id);
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Broker account with id " + id + " not found");
-        }
-
+        String sql = "SELECT * FROM brokerage_accounts";
+        return jdbcTemplate.query(sql, brokerAccountRowMapper)
+                .stream()
+                .filter(account -> Objects.equals(account.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Broker account with id " + id + " not found"
+                ));
     }
 
     @Override

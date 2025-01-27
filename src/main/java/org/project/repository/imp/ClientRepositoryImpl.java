@@ -7,11 +7,11 @@ import org.project.exception.EntityNotFoundException;
 import org.project.model.Client;
 import org.project.repository.BrokerAccountRepository;
 import org.project.repository.ClientRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,13 +29,13 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Client getClient(Long id) {
-        try {
-            String sql = "SELECT * FROM clients WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, clientRowMapper, id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Client with id " + id + " not found");
-        }
-
+        String sql = "SELECT * FROM clients";
+        return jdbcTemplate.query(sql, clientRowMapper)
+                .stream()
+                .filter(client -> Objects.equals(client.getId(), id))
+                .findFirst()
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Client with id " + id + " not found"));
     }
 
     @Override
@@ -72,8 +72,14 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     public Client getByEmail(String email) {
-        String sql = "SELECT * FROM clients WHERE email = ?";
-        return jdbcTemplate.query(sql, clientRowMapper, email).get(0);
+        String sql = "SELECT * FROM clients";
+        return jdbcTemplate.query(sql, clientRowMapper)
+                .stream()
+                .filter(client -> Objects.equals(client.getEmail(), email))
+                .findFirst()
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Client with email " + email + " not found"));
+
     }
 
     private static final RowMapper<Client> clientRowMapper = (rs, rowNum) -> {

@@ -10,7 +10,7 @@ public interface TransactionRepository {
 
     Transaction getTransaction(Long id);
 
-    int createTransaction(Transaction transaction);
+    void createTransaction(Transaction transaction);
 
     void deleteTransaction(Long id);
 
