@@ -34,7 +34,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.project.GenericsTask</mainClass>
+                            <mainClass>org.project.StreamTask</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
