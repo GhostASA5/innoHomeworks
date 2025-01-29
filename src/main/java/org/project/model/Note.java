@@ -6,27 +6,23 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "notes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_code")
-    private String productCode;
+    private String title;
 
-    private Integer quantity;
+    private String content;
 
-    @Column(name = "amount")
-    private Double amount;
-
-    @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 }

@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: notes_production_mode
+
+management:
+  endpoints:
+    access:
+      default: unrestricted
+    web:
+      exposure:
+        include: health, metrics
+  health:
+    db:
+      enabled: true
+    diskspace:
+      path: /
+      threshold: 100000000
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
