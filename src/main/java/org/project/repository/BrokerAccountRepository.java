@@ -12,7 +12,9 @@ public interface BrokerAccountRepository {
 
     void createBrokerAccount(BrokerAccount brokerAccount);
 
-    void updateBrokerAccount(BrokerAccount brokerAccount);
+    void updateBrokerAccount(Long id, BrokerAccount brokerAccount);
 
     void deleteBrokerAccount(Long id);
+
+    void deleteAll();
 }
