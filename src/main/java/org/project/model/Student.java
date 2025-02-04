@@ -6,7 +6,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -32,6 +35,11 @@ public class Student {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate birthDay;
 
-    private String courses;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Course> courses = new ArrayList<>();
+
+    public String toString() {
+        return MessageFormat.format("Student {0} {1}", fio, email);
+    }
 
 }

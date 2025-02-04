@@ -73,11 +73,9 @@ public class StudentServiceTest {
         Student existingStudent = new Student();
         existingStudent.setId(1L);
         existingStudent.setEmail("ex1@mail.ru");
-        existingStudent.setCourses("Python");
 
         Student updatedStudent = new Student();
         updatedStudent.setEmail("ex2@mail.ru");
-        updatedStudent.setCourses("Java");
 
         when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudent));
         when(studentRepository.save(any(Student.class))).thenReturn(updatedStudent);
@@ -86,7 +84,6 @@ public class StudentServiceTest {
 
         assertNotNull(result);
         assertEquals("ex2@mail.ru", result.getEmail());
-        assertEquals("Java", result.getCourses());
         verify(studentRepository, times(1)).save(existingStudent);
     }
 

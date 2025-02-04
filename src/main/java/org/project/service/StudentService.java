@@ -35,7 +35,6 @@ public class StudentService {
         if (studentOptional.isPresent()) {
             Student studentToUpdate = studentOptional.get();
             studentToUpdate.setEmail(student.getEmail());
-            studentToUpdate.setCourses(student.getCourses());
             studentRepository.save(studentToUpdate);
 
             return studentToUpdate;

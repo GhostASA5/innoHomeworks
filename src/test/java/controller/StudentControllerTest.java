@@ -59,7 +59,6 @@ public class StudentControllerTest {
         student = Student.builder()
                 .id(1L)
                 .email("ex1@mail.ru")
-                .courses("Java")
                 .build();
     }
 
