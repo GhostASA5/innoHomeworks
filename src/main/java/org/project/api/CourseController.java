@@ -20,16 +20,28 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Course> getCourseById(@PathVariable long id) {
+        return ResponseEntity.ok(courseService.getCourseById(id));
+    }
+
     @PostMapping
     public ResponseEntity<Void> createCourse(@RequestBody Course course) {
         courseService.addCourse(course);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/register/{courseId}")
-    public ResponseEntity<Void> registerStudent(@RequestParam Long id,
-                                                @PathVariable Long courseId) {
-        courseService.registerStudentOnCourse(id, courseId);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateCourse(@PathVariable long id, @RequestBody Course course) {
+        courseService.updateCourse(id, course);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/status/{id}/{status}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable long id, @PathVariable boolean status) {
+        courseService.changeStatus(id, status);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

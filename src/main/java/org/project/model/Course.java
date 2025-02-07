@@ -1,10 +1,10 @@
 package org.project.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 
 
 @Entity
@@ -22,14 +22,11 @@ public class Course {
 
     private String courseName;
 
-    private String description;
+    private LocalDate startDate;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    @JsonIgnore
-    private Student student;
+    private Boolean activeStatus;
 
     public String toString() {
-        return MessageFormat.format("Course Name: {0} Description: {1}", courseName, description);
+        return MessageFormat.format("Course Name: {0}", courseName);
     }
 }
