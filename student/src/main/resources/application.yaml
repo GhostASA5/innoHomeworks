@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: student
+
+  datasource:
+    url: jdbc:postgresql://localhost:5435/students_db
+    username: postgres
+    password: postgres
+  jpa:
+    generate-ddl: true
+    open-in-view: true
+
+server:
+  port: 8088

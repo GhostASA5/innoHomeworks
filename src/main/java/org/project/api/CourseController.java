@@ -25,6 +25,16 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
+    @GetMapping("/check/{id}")
+    public ResponseEntity<Boolean> checkCourse(@PathVariable long id) {
+        try {
+            courseService.getCourseById(id);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Void> createCourse(@RequestBody Course course) {
         courseService.addCourse(course);
