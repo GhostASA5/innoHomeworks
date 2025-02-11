@@ -1,6 +1,7 @@
 package org.project.student.student;
 
 import lombok.RequiredArgsConstructor;
+import org.project.student.aop.LogSpendTime;
 import org.project.student.exception.StudentNotFoundException;
 import org.project.student.model.Student;
 import org.project.student.repository.StudentRepository;
@@ -21,16 +22,23 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    @LogSpendTime
+    public List<Student> getStudentsByCourseId(Long courseId) {
+        return studentRepository.findByCourseId(courseId);
+    }
+
     public Student getStudentById(Long id) {
         return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(
                 MessageFormat.format("Student with id {0} not found", id)
         ));
     }
 
+    @LogSpendTime
     public void createStudent(Student student) {
         studentRepository.save(student);
     }
 
+    @LogSpendTime
     public void registerStudentOnCourse(Long courseId, Long studentId) {
         Student student = getStudentById(studentId);
         RestClient restClient = RestClient.create();
