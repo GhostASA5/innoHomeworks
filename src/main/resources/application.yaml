@@ -3,12 +3,18 @@ spring:
     name: students_and_courses
 
   datasource:
-    url: jdbc:postgresql://localhost:5435/students_db
+    url: jdbc:h2:mem:earthquake_db
     username: postgres
     password: postgres
+    driver-class-name: org.h2.Driver
   jpa:
     generate-ddl: true
     open-in-view: true
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
 
 management:
   endpoints:
