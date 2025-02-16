@@ -5,28 +5,27 @@ import lombok.*;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "courses")
+@Table(name = "earthquake")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Course {
+public class Earthquake {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String courseName;
+    private String title;
 
-    private LocalDate startDate;
+    private LocalDateTime time;
 
-    private Boolean activeStatus;
+    private Double magnitude;
 
-    public String toString() {
-        return MessageFormat.format("Course Name: {0}", courseName);
-    }
+    private String place;
 }
