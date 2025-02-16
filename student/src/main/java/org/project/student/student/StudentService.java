@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,11 @@ public class StudentService {
         return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(
                 MessageFormat.format("Student with id {0} not found", id)
         ));
+    }
+
+    public List<Student> getStudentsOlderThan(Integer age) {
+        LocalDate cutoffDate = LocalDate.now().minusYears(age);
+        return studentRepository.findStudentsOlderThan(cutoffDate);
     }
 
     @LogSpendTime

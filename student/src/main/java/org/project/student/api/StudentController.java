@@ -31,6 +31,11 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
+    @GetMapping("/older/{age}")
+    public ResponseEntity<List<Student>> getStudentsByAge(@PathVariable Integer age) {
+        return ResponseEntity.ok(studentService.getStudentsOlderThan(age));
+    }
+
     @PostMapping
     public ResponseEntity<Void> createStudent(@RequestBody @Valid Student student) {
         studentService.createStudent(student);
