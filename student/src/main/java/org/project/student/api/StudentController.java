@@ -21,9 +21,19 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<Student>> getStudentsByCourseId(@PathVariable Long courseId) {
+        return ResponseEntity.ok(studentService.getStudentsByCourseId(courseId));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
+    }
+
+    @GetMapping("/older/{age}")
+    public ResponseEntity<List<Student>> getStudentsByAge(@PathVariable Integer age) {
+        return ResponseEntity.ok(studentService.getStudentsOlderThan(age));
     }
 
     @PostMapping
