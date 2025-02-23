@@ -36,6 +36,11 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentsOlderThan(age));
     }
 
+    @GetMapping("/studentsWith2Courses")
+    public List<Student> getStudentsWith2Courses() {
+        return studentService.getStudentsWith2OrMoreCourses();
+    }
+
     @PostMapping
     public ResponseEntity<Void> createStudent(@RequestBody @Valid Student student) {
         studentService.createStudent(student);

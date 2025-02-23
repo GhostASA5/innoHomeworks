@@ -35,6 +35,11 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/multipleCourses")
+    public List<Long> getMultipleCourses() {
+        return courseService.getStudentsWith2AndMoreCourses();
+    }
+
     @PostMapping
     public ResponseEntity<Void> createCourse(@RequestBody Course course) {
         courseService.addCourse(course);

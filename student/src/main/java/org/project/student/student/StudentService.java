@@ -10,6 +10,7 @@ import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,18 @@ public class StudentService {
     public List<Student> getStudentsOlderThan(Integer age) {
         LocalDate cutoffDate = LocalDate.now().minusYears(age);
         return studentRepository.findStudentsOlderThan(cutoffDate);
+    }
+
+    public List<Student> getStudentsWith2OrMoreCourses() {
+        RestClient restClient = RestClient.create();
+        List getStudentsIds = restClient.get()
+                .uri("http://localhost:8080/api/courses/multipleCourses")
+                .retrieve()
+                .body(List.class);
+        List<Student> students = getStudentsIds.stream()
+                .map(i -> getStudentById((Long) i))
+                .toList();
+        return students;
     }
 
     @LogSpendTime

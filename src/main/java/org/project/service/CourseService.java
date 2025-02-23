@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.project.exception.CourseNotFoundException;
 import org.project.model.Course;
 import org.project.repository.CourseRepository;
+import org.project.repository.CourseToStudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
 
+    private final CourseToStudentRepository courseToStudentRepository;
+
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
@@ -23,6 +26,10 @@ public class CourseService {
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElseThrow(() ->
                 new CourseNotFoundException("Course not found"));
+    }
+
+    public List<Long> getStudentsWith2AndMoreCourses() {
+        return courseToStudentRepository.findStudentsWithMultipleCourses();
     }
 
     public void addCourse(Course course) {
