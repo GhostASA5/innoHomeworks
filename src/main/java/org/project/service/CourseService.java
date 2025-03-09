@@ -36,6 +36,12 @@ public class CourseService {
         courseRepository.save(course);
     }
 
+    public void archive(Long id) {
+        Course existingCourse = getCourseById(id);
+        existingCourse.setActiveStatus(true);
+        courseRepository.save(existingCourse);
+    }
+
     public void updateCourse(Long id, Course course) {
         Course existingCourse = getCourseById(id);
         existingCourse.setCourseName(course.getCourseName());

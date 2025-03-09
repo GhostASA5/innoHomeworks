@@ -46,6 +46,12 @@ public class CourseController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/archive/{courseId}")
+    public ResponseEntity<Void> archiveCourse(@PathVariable long courseId) {
+        courseService.archive(courseId);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCourse(@PathVariable long id, @RequestBody Course course) {
         courseService.updateCourse(id, course);
