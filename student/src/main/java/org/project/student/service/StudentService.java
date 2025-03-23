@@ -2,14 +2,18 @@ package org.project.student.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.student.aop.LogSpendTime;
+import org.project.student.dto.RegisterStudent;
 import org.project.student.exception.StudentNotFoundException;
+import org.project.student.model.Role;
 import org.project.student.model.Student;
 import org.project.student.repository.StudentRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +22,8 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
@@ -56,7 +62,15 @@ public class StudentService {
     }
 
     @LogSpendTime
-    public void createStudent(Student student) {
+    public void createStudent(RegisterStudent studentReg) {
+        Student student = new Student();
+        student.setEmail(studentReg.getEmail());
+        student.setFio(studentReg.getFio());
+        student.setBirthDay(studentReg.getBirthDay());
+        Role role = Role.from(studentReg.getRoleType());
+        student.setRoles(Collections.singletonList(role));
+        student.setPassword(passwordEncoder.encode(studentReg.getPassword()));
+
         studentRepository.save(student);
     }
 

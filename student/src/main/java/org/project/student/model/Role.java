@@ -1,4 +1,4 @@
-package org.project.student.model.user;
+package org.project.student.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,8 +23,8 @@ public class Role {
     private RoleType role;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     public GrantedAuthority toGrantedAuthority() {
         return new SimpleGrantedAuthority(role.toString());

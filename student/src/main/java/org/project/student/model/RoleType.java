@@ -1,4 +1,4 @@
-package org.project.student.model.user;
+package org.project.student.model;
 
 public enum RoleType {
 

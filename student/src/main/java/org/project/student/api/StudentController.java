@@ -2,6 +2,7 @@ package org.project.student.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.project.student.dto.RegisterStudent;
 import org.project.student.model.Student;
 import org.project.student.service.StudentService;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,8 @@ public class StudentController {
         return studentService.getStudentsWith2OrMoreCourses();
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createStudent(@RequestBody @Valid Student student) {
+    @PostMapping("/register")
+    public ResponseEntity<Void> createStudent(@RequestBody @Valid RegisterStudent student) {
         studentService.createStudent(student);
         return ResponseEntity.ok().build();
     }
