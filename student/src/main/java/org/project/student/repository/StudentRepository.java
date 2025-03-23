@@ -12,6 +12,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     List<Student> findByCourseId(Long courseId);
 
+    Student findByEmail(String email);
+
     @Query("SELECT s FROM Student s WHERE s.birthDay < :cutoffDate")
     List<Student> findStudentsOlderThan(@Param("cutoffDate") LocalDate cutoffDate);
 }

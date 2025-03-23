@@ -3,7 +3,7 @@ package org.project.student.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.student.model.Student;
-import org.project.student.student.StudentService;
+import org.project.student.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

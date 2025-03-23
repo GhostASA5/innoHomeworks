@@ -1,4 +1,4 @@
-package org.project.student.student;
+package org.project.student.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.student.aop.LogSpendTime;
@@ -10,7 +10,6 @@ import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +32,10 @@ public class StudentService {
         return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(
                 MessageFormat.format("Student with id {0} not found", id)
         ));
+    }
+
+    public Student getStudentByEmail(String email) {
+        return studentRepository.findByEmail(email);
     }
 
     public List<Student> getStudentsOlderThan(Integer age) {

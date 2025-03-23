@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.project.exception.CourseNotFoundException;
 import org.project.model.Course;
+import org.project.model.CourseToStudent;
 import org.project.repository.CourseRepository;
 import org.project.repository.CourseToStudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,14 @@ public class CourseService {
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public List<Course> getStudentCourses(long studentId) {
+        List<CourseToStudent> courseToStudents = courseToStudentRepository.findByStudentId(studentId);
+        return courseToStudents.stream()
+                .map(CourseToStudent::getCourseId)
+                .map(this::getCourseById)
+                .toList();
     }
 
     public Course getCourseById(Long id) {

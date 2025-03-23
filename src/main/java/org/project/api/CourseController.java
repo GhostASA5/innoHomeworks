@@ -25,6 +25,11 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
+    @GetMapping("/student/{id}")
+    public ResponseEntity<List<Course>> getCoursesByStudentId(@PathVariable long id) {
+        return ResponseEntity.ok(courseService.getStudentCourses(id));
+    }
+
     @GetMapping("/check/{id}")
     public ResponseEntity<Boolean> checkCourse(@PathVariable long id) {
         try {

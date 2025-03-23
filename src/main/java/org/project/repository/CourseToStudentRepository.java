@@ -10,4 +10,6 @@ public interface CourseToStudentRepository extends JpaRepository<CourseToStudent
 
     @Query("SELECT c.studentId FROM CourseToStudent c GROUP BY c.studentId HAVING COUNT(c.studentId) > 1")
     List<Long> findStudentsWithMultipleCourses();
+
+    List<CourseToStudent> findByStudentId(Long studentId);
 }
