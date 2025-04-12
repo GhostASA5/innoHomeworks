@@ -1,20 +1,18 @@
 package org.project.repository;
 
 import org.project.model.BrokerAccount;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface BrokerAccountRepository {
+public interface BrokerAccountRepository extends JpaRepository<BrokerAccount, Long> {
 
-    List<BrokerAccount> getBrokerAccounts();
+    List<BrokerAccount> findAllByDeletedFalse();
 
-    BrokerAccount getBrokerAccount(Long id);
+    Optional<BrokerAccount> findByIdAndDeletedFalse(Long id);
 
-    void createBrokerAccount(BrokerAccount brokerAccount);
+    List<BrokerAccount> findAllByClientIdAndDeletedFalse(Long clientId);
 
-    void updateBrokerAccount(Long id, BrokerAccount brokerAccount);
-
-    void deleteBrokerAccount(Long id);
-
-    void deleteAll();
+    boolean existsByIdAndClientEmailAndDeletedFalse(Long accountId, String email);
 }
