@@ -9,6 +9,14 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+
+/**
+ * Сущность задачи в системе.
+ * Содержит название, описание и дату создания задачи.
+ *
+ * @author GhostASA5
+ * @version 1.0
+ */
 @Entity
 @Getter
 @Setter

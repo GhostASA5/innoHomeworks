@@ -15,12 +15,31 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 
+/**
+ * Фильтр для логирования входящих HTTP-запросов.
+ * Записывает в лог метод запроса, URI, декодированные credentials из заголовка Authorization
+ * и сохраняет информацию в базу данных через {@link LogEntryRepository}.
+ *
+ * @author GhostASA5
+ * @version 1.0
+ * @see OncePerRequestFilter
+ * @see LogEntry
+ */
 @Component
 @RequiredArgsConstructor
 public class LoggingFilter extends OncePerRequestFilter {
 
     private final LogEntryRepository logEntryRepository;
 
+    /**
+     * Обрабатывает каждый HTTP-запрос, извлекает и логирует информацию о нем.
+     *
+     * @param request HTTP-запрос
+     * @param response HTTP-ответ
+     * @param filterChain цепочка фильтров
+     * @throws ServletException при ошибках сервлета
+     * @throws IOException при ошибках ввода-вывода
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
