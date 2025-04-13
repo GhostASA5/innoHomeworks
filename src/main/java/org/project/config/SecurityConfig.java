@@ -44,7 +44,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/login", "/css/**", "/js/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/webjars/**").permitAll()
                         .requestMatchers("/tasks").hasAnyRole("VIEWER", "USER", "ADMIN")
                         .requestMatchers("/tasks/add").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/tasks/delete/**").hasRole("ADMIN")

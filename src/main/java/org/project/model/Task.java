@@ -1,5 +1,6 @@
 package org.project.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,15 +21,20 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Schema(description = "Сущность задачи")
 public class Task {
 
+    @Schema(description = "Уникальный идентификатор задачи", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Название задачи", example = "Сделать домашнее задание", required = true)
     private String name;
 
+    @Schema(description = "Описание задачи", example = "Домашнее задание по математике", required = true)
     private String description;
 
+    @Schema(description = "Дата создания задачи", example = "12.04.2025", required = true)
     private LocalDateTime createdAt;
 }
