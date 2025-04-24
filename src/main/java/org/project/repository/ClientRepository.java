@@ -1,23 +1,20 @@
 package org.project.repository;
 
 import org.project.model.Client;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
+public interface ClientRepository extends JpaRepository<Client, Long> {
 
-public interface ClientRepository {
+    Optional<Client> findByEmail(String email);
 
-    List<Client> getClients();
+    List<Client> findAllByDeletedFalse();
 
-    Client getClient(Long id);
+    Optional<Client> findByIdAndDeletedFalse(Long id);
 
-    void addClient(Client client);
-
-    void updateClient(Long id, Client client);
-
-    void deleteClient(Long id);
-
-    void deleteAllClients();
-
-    Client getByEmail(String email);
+    boolean existsByIdAndEmailAndDeletedFalse(Long clientId, String email);
 }
