@@ -41,4 +41,9 @@ public class Task {
 
     @Schema(description = "Дата создания задачи", example = "12.04.2025", required = true)
     private LocalDateTime createdAt;
+
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }
