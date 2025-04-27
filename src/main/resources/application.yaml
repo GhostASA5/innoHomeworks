@@ -15,6 +15,25 @@ spring:
     enabled: true
     locations: classpath:db/migration
 
+  cache:
+    type: simple
+    cache-names: clients,accounts,transactions
+    redis:
+      time-to-live: 1800000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    persist-authorization: true
+    filter: true
+  api-docs:
+    path: /v3/api-docs
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+
 application:
   security:
     jwt:
