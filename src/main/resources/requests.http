@@ -1,0 +1,16 @@
+### 1. Получить все задачи
+GET http://localhost:8080/tasks
+Accept: text/html
+
+### 2. Показать форму добавления задачи
+GET http://localhost:8080/tasks/add
+Accept: text/html
+
+### 3. Добавить новую задачу (форма)
+POST http://localhost:8080/tasks/add
+Content-Type: application/x-www-form-urlencoded
+
+name=Postman Task&description=Test from Postman
+
+### 4. Удалить задачу (замените {id} на реальный ID)
+POST http://localhost:8080/tasks/delete/{id}
