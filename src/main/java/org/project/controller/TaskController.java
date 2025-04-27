@@ -7,12 +7,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.project.model.Task;
 import org.project.repository.TaskRepository;
+import org.project.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -24,74 +28,49 @@ import java.time.LocalDateTime;
  * @see Task
  * @see TaskRepository
  */
-@Controller
-@RequestMapping("/tasks")
-@Tag(name = "Task Controller", description = "Операции с задачами")
+@RestController
+@RequestMapping("/api/tasks")
+@Tag(name = "Task Controller", description = "REST API для операций с задачами")
 public class TaskController {
 
+    private final TaskService taskService;
+
     @Autowired
-    private TaskRepository taskRepository;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
-    /**
-     * Отображает список всех задач.
-     *
-     * @param model модель для передачи данных в представление
-     * @return имя Thymeleaf шаблона "tasks"
-     */
     @GetMapping
-    @Operation(summary = "Получить все задачи", description = "Возвращает список всех задач")
-    @ApiResponse(responseCode = "200", description = "Успешное получение списка задач")
-    public String getAllTasks(Model model) {
-        model.addAttribute("tasks", taskRepository.findAll());
-        return "tasks";
+    @Operation(summary = "Получить все задачи")
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(taskService.findAllTasks());
     }
 
-    /**
-     * Отображает форму добавления новой задачи.
-     *
-     * @param model модель для передачи данных в представление
-     * @return имя Thymeleaf шаблона "add-task"
-     */
-    @Operation(summary = "Добавить задачу", description = "Создает новую задачу")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Задача успешно создана"),
-            @ApiResponse(responseCode = "400", description = "Некорректные данные задачи")
-    })
-    @GetMapping("/add")
-    public String showAddTaskForm(Model model) {
-        model.addAttribute("task", new Task());
-        return "add-task";
+    @GetMapping("/{id}")
+    @Operation(summary = "Получить задачу по ID")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        return taskService.findTaskById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Обрабатывает отправку формы добавления задачи.
-     *
-     * @param task объект задачи из формы
-     * @return редирект на страницу списка задач
-     */
-    @PostMapping("/add")
-    public String addTask(@RequestBody
-                          @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Данные новой задачи") Task task) {
-        task.setCreatedAt(LocalDateTime.now());
-        taskRepository.save(task);
-        return "redirect:/tasks";
+    @PostMapping
+    @Operation(summary = "Создать новую задачу")
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task created = taskService.createTask(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    /**
-     * Удаляет задачу по идентификатору.
-     *
-     * @param id идентификатор задачи для удаления
-     * @return редирект на страницу списка задач
-     */
-    @Operation(summary = "Удалить задачу", description = "Удаляет задачу по ID")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Задача успешно удалена"),
-            @ApiResponse(responseCode = "404", description = "Задача не найдена")
-    })
-    @PostMapping("/delete/{id}")
-    public String deleteTask(@Parameter(description = "ID задачи для удаления", required = true)
-                                 @PathVariable Long id) {
-        taskRepository.deleteById(id);
-        return "redirect:/tasks";
+    @PutMapping("/{id}")
+    @Operation(summary = "Обновить задачу")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        return ResponseEntity.ok(taskService.updateTask(id, task));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить задачу")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }
