@@ -6,6 +6,8 @@ import org.project.exception.CourseNotFoundException;
 import org.project.model.Course;
 import org.project.repository.CourseRepository;
 import org.project.repository.CourseToStudentRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +21,12 @@ public class CourseService {
 
     private final CourseToStudentRepository courseToStudentRepository;
 
+    @Cacheable
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
+    @Cacheable(key = "#id")
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElseThrow(() ->
                 new CourseNotFoundException("Course not found"));
@@ -32,16 +36,19 @@ public class CourseService {
         return courseToStudentRepository.findStudentsWithMultipleCourses();
     }
 
+    @CacheEvict(allEntries = true)
     public void addCourse(Course course) {
         courseRepository.save(course);
     }
 
+    @CacheEvict(allEntries = true)
     public void archive(Long id) {
         Course existingCourse = getCourseById(id);
         existingCourse.setActiveStatus(true);
         courseRepository.save(existingCourse);
     }
 
+    @CacheEvict(key = "#id")
     public void updateCourse(Long id, Course course) {
         Course existingCourse = getCourseById(id);
         existingCourse.setCourseName(course.getCourseName());
@@ -49,6 +56,7 @@ public class CourseService {
         courseRepository.save(existingCourse);
     }
 
+    @CacheEvict(key = "#id")
     public void changeStatus(Long id, Boolean status) {
         Course existingCourse = getCourseById(id);
         existingCourse.setActiveStatus(status);
