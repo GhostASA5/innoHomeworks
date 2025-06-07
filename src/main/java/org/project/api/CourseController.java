@@ -58,9 +58,9 @@ public class CourseController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/status/{id}/{status}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable long id, @PathVariable boolean status) {
-        courseService.changeStatus(id, status);
+    @PutMapping("/status/{id}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable long id) {
+        courseService.changeStatus(id);
         return ResponseEntity.ok().build();
     }
 

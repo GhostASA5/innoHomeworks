@@ -40,6 +40,10 @@ public class StudentService {
         return studentRepository.findStudentsOlderThan(cutoffDate);
     }
 
+    public List<Student> getStudentsByCountry(String country) {
+        return studentRepository.findByCountry(country);
+    }
+
     public List<Student> getStudentsWith2OrMoreCourses() {
         RestClient restClient = RestClient.create();
         List getStudentsIds = restClient.get()

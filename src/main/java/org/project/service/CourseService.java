@@ -3,13 +3,16 @@ package org.project.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.project.exception.CourseNotFoundException;
+import org.project.model.ArchivedCourse;
 import org.project.model.Course;
+import org.project.repository.ArchivedCourseRepository;
 import org.project.repository.CourseRepository;
 import org.project.repository.CourseToStudentRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,6 +21,8 @@ import java.util.List;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+
+    private final ArchivedCourseRepository archivedCourseRepository;
 
     private final CourseToStudentRepository courseToStudentRepository;
 
@@ -57,9 +62,13 @@ public class CourseService {
     }
 
     @CacheEvict(key = "#id")
-    public void changeStatus(Long id, Boolean status) {
+    public void changeStatus(Long id) {
         Course existingCourse = getCourseById(id);
-        existingCourse.setActiveStatus(status);
-        courseRepository.save(existingCourse);
+        ArchivedCourse archivedCourse = new ArchivedCourse();
+        archivedCourse.setCourseName(existingCourse.getCourseName());
+        archivedCourse.setStartDate(existingCourse.getStartDate());
+
+        archivedCourseRepository.save(archivedCourse);
+        courseRepository.delete(existingCourse);
     }
 }

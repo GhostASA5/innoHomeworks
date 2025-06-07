@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.PartitionKey;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -32,6 +33,9 @@ public class Student {
     @Column(name = "birth_day")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate birthDay;
+
+    @PartitionKey
+    private String country;
 
     @Column(name = "course_id")
     private Long courseId;
