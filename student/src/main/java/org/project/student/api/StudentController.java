@@ -31,6 +31,11 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
+    @GetMapping("/{country}")
+    public ResponseEntity<List<Student>> getStudentByCountry(@PathVariable String country) {
+        return ResponseEntity.ok(studentService.getStudentsByCountry(country));
+    }
+
     @GetMapping("/older/{age}")
     public ResponseEntity<List<Student>> getStudentsByAge(@PathVariable Integer age) {
         return ResponseEntity.ok(studentService.getStudentsOlderThan(age));
