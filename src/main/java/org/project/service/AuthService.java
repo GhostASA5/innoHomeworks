@@ -1,6 +1,7 @@
 package org.project.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.project.dto.AuthRequest;
 import org.project.dto.AuthResponse;
 import org.project.dto.RegisterRequest;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final ClientRepository clientRepository;
@@ -33,6 +35,7 @@ public class AuthService {
      * @return объект ответа с JWT токеном для аутентификации
      */
     public AuthResponse register(RegisterRequest request) {
+        log.info("Register request: {}", request);
         var client = Client.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -58,6 +61,7 @@ public class AuthService {
      * @throws org.springframework.security.core.AuthenticationException если аутентификация не удалась
      */
     public AuthResponse authenticate(AuthRequest request) {
+        log.info("Authenticate request: {}", request);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

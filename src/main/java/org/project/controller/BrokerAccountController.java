@@ -23,7 +23,7 @@ import java.util.List;
  * Предоставляет REST API для работы с брокерскими счетами клиентов.
  */
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 @Tag(name = "Broker Accounts", description = "API для управления брокерскими счетами")
 public class BrokerAccountController {

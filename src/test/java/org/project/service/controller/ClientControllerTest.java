@@ -51,7 +51,7 @@ class ClientControllerTest {
 
         Mockito.when(clientService.getAllClients()).thenReturn(Collections.singletonList(clientDTO));
 
-        mockMvc.perform(get("/api/clients"))
+        mockMvc.perform(get("/api/v1/clients"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -74,7 +74,7 @@ class ClientControllerTest {
 
         Mockito.when(clientService.createClient(Mockito.any(ClientDTO.class))).thenReturn(savedClient);
 
-        mockMvc.perform(post("/api/clients")
+        mockMvc.perform(post("/api/v1/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clientDTO)))
                 .andExpect(status().isCreated())

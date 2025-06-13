@@ -47,7 +47,7 @@ class BrokerAccountControllerTest {
 
         Mockito.when(brokerAccountService.getAllBrokerAccounts()).thenReturn(Collections.singletonList(accountDTO));
 
-        mockMvc.perform(get("/api/accounts"))
+        mockMvc.perform(get("/api/v1/accounts"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -70,7 +70,7 @@ class BrokerAccountControllerTest {
 
         Mockito.when(brokerAccountService.createBrokerAccount(Mockito.any(BrokerAccountDTO.class))).thenReturn(savedAccount);
 
-        mockMvc.perform(post("/api/accounts")
+        mockMvc.perform(post("/api/v1/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDTO)))
                 .andExpect(status().isCreated())

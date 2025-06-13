@@ -1,6 +1,7 @@
 package org.project.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.project.dto.TransactionDTO;
 import org.project.exception.EntityNotFoundException;
@@ -8,6 +9,8 @@ import org.project.model.BrokerAccount;
 import org.project.model.Transaction;
 import org.project.repository.BrokerAccountRepository;
 import org.project.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +24,16 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final BrokerAccountRepository brokerAccountRepository;
     private final ModelMapper modelMapper;
+    private final KafkaTemplate<String, Transaction> kafkaTemplate;
+
+    @Value("${kafka.topics.transactionTopic}")
+    private String transactionTopic;
 
     /**
      * Получает список всех активных транзакций.
@@ -46,6 +54,7 @@ public class TransactionService {
      * @throws EntityNotFoundException если транзакция не найдена
      */
     public TransactionDTO getTransactionById(Long id) {
+        log.info("Get transaction by id: {}", id);
         Transaction transaction = transactionRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction not found with id: " + id));
         return modelMapper.map(transaction, TransactionDTO.class);
@@ -58,6 +67,7 @@ public class TransactionService {
      * @return список DTO транзакций
      */
     public List<TransactionDTO> getTransactionsByBrokerAccountId(Long brokerAccountId) {
+        log.info("Get transactions by broker account id: {}", brokerAccountId);
         return transactionRepository.findAllByBrokerAccountIdAndDeletedFalse(brokerAccountId).stream()
                 .map(transaction -> modelMapper.map(transaction, TransactionDTO.class))
                 .collect(Collectors.toList());
@@ -73,6 +83,7 @@ public class TransactionService {
      */
     @Transactional
     public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
+        log.info("Create transaction: {}", transactionDTO);
         BrokerAccount account = brokerAccountRepository.findByIdAndDeletedFalse(transactionDTO.getBrokerAccountId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Broker account not found with id: " + transactionDTO.getBrokerAccountId()));
@@ -83,13 +94,16 @@ public class TransactionService {
         if (transaction.getTransactionDate() == null) {
             transaction.setTransactionDate(LocalDateTime.now());
         }
-
         transaction.setDeleted(false);
-
         updateAccountBalance(account, transaction);
 
         brokerAccountRepository.save(account);
         Transaction savedTransaction = transactionRepository.save(transaction);
+
+        if (transaction.getAmount() > 1000000) {
+            kafkaTemplate.send(transactionTopic, transaction);
+        }
+
         return modelMapper.map(savedTransaction, TransactionDTO.class);
     }
 
@@ -101,6 +115,7 @@ public class TransactionService {
      */
     @Transactional
     public void deleteTransaction(Long id) {
+        log.info("Delete transaction by id: {}", id);
         Transaction transaction = transactionRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction not found with id: " + id));
         transaction.setDeleted(true);

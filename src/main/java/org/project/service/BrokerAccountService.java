@@ -1,6 +1,7 @@
 package org.project.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.project.dto.BrokerAccountDTO;
 import org.project.exception.EntityNotFoundException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BrokerAccountService {
 
     private final BrokerAccountRepository brokerAccountRepository;
@@ -45,6 +47,7 @@ public class BrokerAccountService {
      * @throws EntityNotFoundException если счет не найден
      */
     public BrokerAccountDTO getBrokerAccountById(Long id) {
+        log.info("Get broker account: id - {}", id);
         BrokerAccount account = brokerAccountRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Broker account not found with id: " + id));
         return modelMapper.map(account, BrokerAccountDTO.class);
@@ -57,6 +60,7 @@ public class BrokerAccountService {
      * @return список DTO брокерских счетов
      */
     public List<BrokerAccountDTO> getBrokerAccountsByClientId(Long clientId) {
+        log.info("Get broker accounts by client id - {}", clientId);
         return brokerAccountRepository.findAllByClientIdAndDeletedFalse(clientId).stream()
                 .map(account -> modelMapper.map(account, BrokerAccountDTO.class))
                 .collect(Collectors.toList());
@@ -71,6 +75,7 @@ public class BrokerAccountService {
      */
     @Transactional
     public BrokerAccountDTO createBrokerAccount(BrokerAccountDTO brokerAccountDTO) {
+        log.info("Create broker account - {}", brokerAccountDTO);
         Client client = clientRepository.findByIdAndDeletedFalse(brokerAccountDTO.getClientId())
                 .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + brokerAccountDTO.getClientId()));
 
@@ -92,6 +97,7 @@ public class BrokerAccountService {
      */
     @Transactional
     public BrokerAccountDTO updateBrokerAccount(Long id, BrokerAccountDTO brokerAccountDTO) {
+        log.info("Update broker account - {}", id);
         BrokerAccount existingAccount = brokerAccountRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Broker account not found with id: " + id));
 
@@ -113,6 +119,7 @@ public class BrokerAccountService {
      */
     @Transactional
     public void deleteBrokerAccount(Long id) {
+        log.info("Delete broker account - {}", id);
         BrokerAccount account = brokerAccountRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Broker account not found with id: " + id));
         account.setDeleted(true);

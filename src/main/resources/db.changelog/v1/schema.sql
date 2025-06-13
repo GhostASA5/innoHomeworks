@@ -1,24 +1,29 @@
 -- Таблица клиентов
 CREATE TABLE IF NOT EXISTS clients (
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     name VARCHAR(255),
     email VARCHAR(255) UNIQUE,
-    phone_number VARCHAR(15)
+    phone VARCHAR(15),
+    password VARCHAR(15),
+    role VARCHAR(15),
+    deleted BOOLEAN
 );
 
 -- Таблица брокерских аккаунтов
 CREATE TABLE IF NOT EXISTS brokerage_accounts (
-    id SERIAL PRIMARY KEY,
-    client_id INT REFERENCES clients(id),
+    id BIGINT PRIMARY KEY,
+    client_id BIGINT REFERENCES clients(id),
     account_number VARCHAR(20) UNIQUE,
-    balance DECIMAL(15, 2)
+    balance FLOAT,
+    deleted BOOLEAN
 );
 
 -- Таблица транзакций
 CREATE TABLE IF NOT EXISTS transactions (
-    id SERIAL PRIMARY KEY,
-    brokerage_account_id INT REFERENCES brokerage_accounts(id),
+    id BIGINT PRIMARY KEY,
+    brokerage_account_id BIGINT REFERENCES brokerage_accounts(id),
     transaction_date TIMESTAMP,
-    amount DECIMAL(15, 2),
-    type VARCHAR(50)
+    amount FLOAT,
+    type VARCHAR(50),
+    deleted BOOLEAN
 );
