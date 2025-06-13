@@ -48,7 +48,7 @@ class TransactionControllerTest {
 
         Mockito.when(transactionService.getAllTransactions()).thenReturn(Collections.singletonList(transactionDTO));
 
-        mockMvc.perform(get("/api/transactions"))
+        mockMvc.perform(get("/api/v1/transactions"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -73,7 +73,7 @@ class TransactionControllerTest {
         Mockito.when(transactionService.createTransaction(Mockito.any(TransactionDTO.class)))
                 .thenReturn(savedTransaction);
 
-        mockMvc.perform(post("/api/transactions")
+        mockMvc.perform(post("/api/v1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(transactionDTO)))
                 .andExpect(status().isCreated())

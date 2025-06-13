@@ -24,7 +24,7 @@ import java.util.List;
  * Предоставляет REST API для работы с клиентами.
  */
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/api/v1/clients")
 @RequiredArgsConstructor
 @Tag(name = "Clients", description = "API для управления клиентами")
 public class ClientController {
