@@ -1,7 +1,7 @@
 package org.project.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.project.dto.ClientDTO;
 import org.project.exception.EntityNotFoundException;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ClientService {
 
     private final ClientRepository clientRepository;
@@ -48,9 +49,22 @@ public class ClientService {
      */
     @Cacheable(value = "clients", key = "#id")
     public ClientDTO getClientById(Long id) {
+        log.info("Getting client with id {}", id);
         Client client = clientRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
         return modelMapper.map(client, ClientDTO.class);
+    }
+
+    /**
+     * Получает клиента по email.
+     *
+     * @param email email клиента
+     * @return DTO клиента
+     * @throws EntityNotFoundException если клиент не найден
+     */
+    public Client getClientByEmail(String email) {
+        log.info("Getting client with email {}", email);
+        return clientRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Client not found with email: " + email));
     }
 
     /**
@@ -62,6 +76,7 @@ public class ClientService {
     @Transactional
     @CachePut(value = "clients", key = "#result.id")
     public ClientDTO createClient(ClientDTO clientDTO) {
+        log.info("Creating client {}", clientDTO);
         Client client = modelMapper.map(clientDTO, Client.class);
         client.setDeleted(false);
         Client savedClient = clientRepository.save(client);
@@ -79,6 +94,7 @@ public class ClientService {
     @Transactional
     @CachePut(value = "clients", key = "#id")
     public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
+        log.info("Updating client with id {}", id);
         Client existingClient = clientRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
 
@@ -96,6 +112,7 @@ public class ClientService {
     @Transactional
     @CacheEvict(value = "clients", key = "#id")
     public void deleteClient(Long id) {
+        log.info("Deleting client with id {}", id);
         Client client = clientRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
         client.setDeleted(true);

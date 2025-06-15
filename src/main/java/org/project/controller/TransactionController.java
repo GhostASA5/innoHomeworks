@@ -23,7 +23,7 @@ import java.util.List;
  * Предоставляет REST API для работы с финансовыми транзакциями.
  */
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
 @Tag(name = "Transactions", description = "API для управления транзакциями")
 public class TransactionController {

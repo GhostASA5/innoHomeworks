@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Предоставляет REST API для входа в систему и создания новых учетных записей.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "API для аутентификации и регистрации пользователей")
 public class AuthController {

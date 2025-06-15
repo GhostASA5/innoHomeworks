@@ -19,7 +19,7 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "broker_account_id", nullable = false)
+    @JoinColumn(name = "brokerage_account_id", nullable = false)
     private BrokerAccount brokerAccount;
 
     @Column(name = "transaction_date", nullable = false)
